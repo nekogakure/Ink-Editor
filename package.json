@@ -1,0 +1,27 @@
+{
+  "name": "ink-editor",
+  "version": "1.0.0",
+  "description": "a simple and beautiful editor for developer.",
+  "homepage": "https://github.com/nekogakure/Ink-Editor#readme",
+  "bugs": {
+    "url": "https://github.com/nekogakure/Ink-Editor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nekogakure/Ink-Editor.git"
+  },
+  "license": "MIT",
+  "author": "nekogakure",
+  "type": "commonjs",
+  "main": "dist/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start:live": "tsc",
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^38.2.2",
+    "typescript": "^5.4.0"
+  }
+}
