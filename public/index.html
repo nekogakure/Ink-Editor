@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InkEditor</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- メインコンテナ -->
+    <div id="app-container">
+      <!-- ツールバー -->
+      <header id="toolbar">
+        <div class="toolbar-left">
+          <button class="toolbar-button" id="btn-new" title="New File">
+            <span class="material-icons">note_add</span>
+          </button>
+          <button class="toolbar-button" id="btn-open" title="Open File">
+            <span class="material-icons">folder_open</span>
+          </button>
+          <button class="toolbar-button" id="btn-save" title="Save">
+            <span class="material-icons">save</span>
+          </button>
+          <div class="toolbar-separator"></div>
+          <button class="toolbar-button" id="btn-build" title="Build">
+            <span class="material-icons">build</span>
+          </button>
+          <button class="toolbar-button" id="btn-run" title="Run">
+            <span class="material-icons">play_arrow</span>
+          </button>
+        </div>
+        <div class="toolbar-center">
+          <span class="app-title">InkEditor</span>
+        </div>
+        <div class="toolbar-right">
+          <button class="toolbar-button" id="btn-settings" title="Settings">
+            <span class="material-icons">settings</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- メインコンテンツエリア -->
+      <div id="main-content">
+        <!-- 左サイドバー -->
+        <aside id="left-sidebar" class="sidebar">
+          <div class="sidebar-tabs">
+            <button class="sidebar-tab active" data-panel="explorer">
+              <span class="material-icons">folder</span>
+            </button>
+            <button class="sidebar-tab" data-panel="search">
+              <span class="material-icons">search</span>
+            </button>
+            <button class="sidebar-tab" data-panel="git">
+              <span class="material-icons">source</span>
+            </button>
+            <button class="sidebar-tab" data-panel="outline">
+              <span class="material-icons">list</span>
+            </button>
+          </div>
+          <div class="sidebar-content">
+            <!-- エクスプローラーパネル -->
+            <div id="explorer-panel" class="sidebar-panel active">
+              <div class="panel-header">
+                <h3>EXPLORER</h3>
+                <button class="panel-action" title="New File">
+                  <span class="material-icons">note_add</span>
+                </button>
+              </div>
+              <div class="panel-body">
+                <div class="tree-view">
+                  <div class="tree-item">
+                    <span class="material-icons tree-icon">folder</span>
+                    <span>project</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 検索パネル -->
+            <div id="search-panel" class="sidebar-panel">
+              <div class="panel-header">
+                <h3>SEARCH</h3>
+              </div>
+              <div class="panel-body">
+                <input
+                  type="text"
+                  class="search-input"
+                  placeholder="Search..."
+                />
+              </div>
+            </div>
+
+            <!-- Gitパネル -->
+            <div id="git-panel" class="sidebar-panel">
+              <div class="panel-header">
+                <h3>SOURCE CONTROL</h3>
+              </div>
+              <div class="panel-body">
+                <p class="panel-message">
+                  No source control providers registered.
+                </p>
+              </div>
+            </div>
+
+            <!-- アウトラインパネル -->
+            <div id="outline-panel" class="sidebar-panel">
+              <div class="panel-header">
+                <h3>OUTLINE</h3>
+              </div>
+              <div class="panel-body">
+                <p class="panel-message">No outline available.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- エディタエリア -->
+        <main id="editor-area">
+          <!-- タブバー -->
+          <div id="tab-bar">
+            <div class="tab active" data-file="untitled-1">
+              <span class="tab-label">Untitled-1</span>
+              <button class="tab-close">
+                <span class="material-icons">close</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- エディタコンテナ -->
+          <div id="editor-container">
+            <div class="editor-welcome">
+              <div class="welcome-content">
+                <h1>InkEditor</h1>
+                <p>A simple and beautiful editor for developers.</p>
+                <div class="welcome-actions">
+                  <button class="welcome-button" id="welcome-new">
+                    <span class="material-icons">note_add</span>
+                    <span>New File</span>
+                  </button>
+                  <button class="welcome-button" id="welcome-open">
+                    <span class="material-icons">folder_open</span>
+                    <span>Open File</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- 下部デバッグエリア -->
+      <footer id="debug-area" class="collapsed">
+        <div class="debug-header">
+          <div class="debug-tabs">
+            <button class="debug-tab active" data-panel="console">
+              CONSOLE
+            </button>
+            <button class="debug-tab" data-panel="terminal">TERMINAL</button>
+            <button class="debug-tab" data-panel="output">OUTPUT</button>
+          </div>
+          <button class="debug-toggle" id="debug-toggle">
+            <span class="material-icons">keyboard_arrow_up</span>
+          </button>
+        </div>
+        <div class="debug-content">
+          <div id="console-panel" class="debug-panel active">
+            <div class="console-output">
+              <div class="console-message">Welcome to InkEditor Console</div>
+            </div>
+          </div>
+          <div id="terminal-panel" class="debug-panel">
+            <div class="terminal-output">Terminal</div>
+          </div>
+          <div id="output-panel" class="debug-panel">
+            <div class="output-content">Output</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ステータスバー -->
+    <div id="status-bar">
+      <div class="status-left">
+        <span class="status-item" id="status-line">Ln 1, Col 1</span>
+        <span class="status-item" id="status-encoding">UTF-8</span>
+      </div>
+      <div class="status-right">
+        <span class="status-item" id="status-language">Plain Text</span>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
