@@ -3,9 +3,7 @@ node_modules/
 
 # ビルド出力
 dist/
-public/*.js
-public/*.js.map
-public/*.d.ts
+dist_public/
 
 # ログファイル
 *.log
