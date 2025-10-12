@@ -63,6 +63,7 @@ body {
   justify-content: space-between;
   padding: 0 12px;
   -webkit-app-region: drag;
+  position: relative;
 }
 
 .toolbar-left,
@@ -71,7 +72,29 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
-  -webkit-app-region: no-drag;
+}
+
+.toolbar-left {
+  flex: 1;
+  justify-content: flex-start;
+  z-index: 1;
+}
+
+.toolbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toolbar-center .app-title {
+  pointer-events: none;
+  user-select: none;
+}
+
+.toolbar-right {
+  flex: 1;
+  justify-content: flex-end;
+  z-index: 1;
 }
 
 .toolbar-button {
@@ -86,6 +109,7 @@ body {
   cursor: pointer;
   color: var(--color-text-primary);
   transition: background-color 0.15s ease;
+  -webkit-app-region: no-drag;
 }
 
 .toolbar-button:hover {
@@ -105,6 +129,7 @@ body {
   height: 24px;
   background-color: var(--color-border);
   margin: 0 4px;
+  -webkit-app-region: no-drag;
 }
 
 .app-title {

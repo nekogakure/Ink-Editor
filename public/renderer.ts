@@ -71,7 +71,7 @@ class UIManager {
 
     // ウェルカム画面ボタン
     this.addClickListener("welcome-new", () => this.handleNewFile());
-    this.addClickListener("welcome-open", () => this.handleOpenFile());
+    this.addClickListener("welcome-open", () => this.handleOpenFolder());
 
     // サイドバータブ
     const sidebar_tabs = document.querySelectorAll(".sidebar-tab");
