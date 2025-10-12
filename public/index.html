@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>InkEditor</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles/main.css" />
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
@@ -115,11 +115,31 @@
                 <h3>SEARCH</h3>
               </div>
               <div class="panel-body">
-                <input
-                  type="text"
-                  class="search-input"
-                  placeholder="Search..."
-                />
+                <div class="search-container">
+                  <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search..."
+                  />
+                  <div class="search-options">
+                    <label class="search-option">
+                      <input
+                        type="radio"
+                        name="search-mode"
+                        value="current"
+                        checked
+                      />
+                      <span>Current File</span>
+                    </label>
+                    <label class="search-option">
+                      <input type="radio" name="search-mode" value="all" />
+                      <span>All Files</span>
+                    </label>
+                  </div>
+                  <div class="search-results">
+                    <!-- 検索結果がここに表示されます -->
+                  </div>
+                </div>
               </div>
             </div>
 

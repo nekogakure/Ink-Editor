@@ -1,0 +1,127 @@
+/**
+ * デバッグエリアのスタイル
+ */
+
+#debug-area {
+  background-color: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  height: var(--debug-area-height);
+  transition: height 0.2s ease;
+}
+
+#debug-area.collapsed {
+  height: 32px;
+}
+
+.debug-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  background-color: var(--color-bg-tertiary);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 8px;
+}
+
+.debug-tabs {
+  display: flex;
+  gap: 2px;
+}
+
+.debug-tab {
+  padding: 4px 12px;
+  border: none;
+  background-color: transparent;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.debug-tab:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.debug-tab.active {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.debug-toggle {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background-color: transparent;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: background-color 0.15s ease;
+}
+
+.debug-toggle:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.debug-toggle .material-icons {
+  font-size: 20px;
+}
+
+.debug-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+#debug-area.collapsed .debug-content {
+  display: none;
+}
+
+.debug-panel {
+  display: none;
+  height: 100%;
+  overflow: auto;
+}
+
+.debug-panel.active {
+  display: block;
+}
+
+/* コンソール */
+.console-output {
+  padding: 8px;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+  overflow: auto;
+  height: 100%;
+}
+
+.console-message {
+  padding: 2px 0;
+  color: var(--color-text-primary);
+}
+
+/* ターミナル */
+.terminal-output {
+  padding: 8px;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-small);
+  background-color: var(--color-text-primary);
+  color: var(--color-bg-primary);
+  height: 100%;
+}
+
+/* 出力 */
+.output-content {
+  padding: 8px;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-small);
+  height: 100%;
+}

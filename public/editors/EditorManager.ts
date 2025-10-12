@@ -198,6 +198,20 @@ export class EditorManager {
   }
 
   /**
+   * 指定した行にジャンプ
+   */
+  public goToLine(line_number: number): void {
+    if (!this.editor) {
+      console.warn("Editor is not initialized. Cannot go to line.");
+      return;
+    }
+
+    // 行にジャンプしてカーソルを移動
+    this.editor.revealLineInCenter(line_number);
+    this.editor.setPosition({ lineNumber: line_number, column: 1 });
+  }
+
+  /**
    * 読み取り専用モードを設定
    */
   public setReadOnly(readonly: boolean): void {

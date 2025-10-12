@@ -1,0 +1,60 @@
+/**
+ * ウェルカム画面のスタイル
+ */
+
+.editor-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: var(--color-bg-primary);
+}
+
+.welcome-content {
+  text-align: center;
+  max-width: 500px;
+  padding: 40px;
+}
+
+.welcome-content h1 {
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+}
+
+.welcome-content p {
+  font-size: var(--font-size-large);
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.welcome-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  border-radius: var(--border-radius-large);
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-normal);
+  transition: all 0.15s ease;
+}
+
+.welcome-button:hover {
+  background-color: var(--color-bg-hover);
+  border-color: var(--color-text-secondary);
+}
+
+.welcome-button .material-icons {
+  font-size: 20px;
+}

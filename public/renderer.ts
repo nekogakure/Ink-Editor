@@ -2,6 +2,7 @@ import { FileManager } from "./utils/FileManager";
 import { ExplorerManager } from "./utils/ExplorerManager";
 import { EditorManager } from "./editors/EditorManager";
 import { TabManager } from "./utils/TabManager";
+import { SearchManager } from "./utils/SearchManager";
 
 /**
  * レンダラープロセス
@@ -18,6 +19,7 @@ class UIManager {
   private explorer_manager: ExplorerManager;
   private editor_manager: EditorManager;
   private tab_manager: TabManager;
+  private search_manager: SearchManager;
   private editor_initialized: boolean = false;
 
   constructor() {
@@ -25,6 +27,7 @@ class UIManager {
     this.explorer_manager = new ExplorerManager();
     this.editor_manager = new EditorManager();
     this.tab_manager = new TabManager();
+    this.search_manager = new SearchManager();
     this.initializeUI();
     this.setupEventListeners();
     this.setupElectronListeners();
@@ -107,6 +110,35 @@ class UIManager {
         this.handleCloseTab();
       }
     });
+
+    // 検索入力
+    const search_input = document.querySelector(
+      ".search-input"
+    ) as HTMLInputElement;
+    const search_mode_radios = document.querySelectorAll(
+      'input[name="search-mode"]'
+    );
+
+    if (search_input) {
+      search_input.addEventListener("input", () => {
+        const query = search_input.value;
+        const mode = this.search_manager.getSearchMode();
+        this.search_manager.performSearch(query, mode);
+      });
+    }
+
+    search_mode_radios.forEach((radio) => {
+      radio.addEventListener("change", (e) => {
+        const target = e.target as HTMLInputElement;
+        const mode = target.value as "current" | "all";
+        this.search_manager.setSearchMode(mode);
+
+        // 既に検索クエリがある場合は再検索
+        if (search_input && search_input.value.trim()) {
+          this.search_manager.performSearch(search_input.value, mode);
+        }
+      });
+    });
   }
 
   /**
@@ -149,6 +181,21 @@ class UIManager {
     // すべてのタブが閉じられたとき
     window.addEventListener("all-tabs-closed", (() => {
       this.showWelcomeScreen();
+    }) as EventListener);
+
+    // 現在のファイル内を検索
+    window.addEventListener("search-in-current", ((e: CustomEvent) => {
+      this.handleSearchInCurrent(e.detail.query);
+    }) as EventListener);
+
+    // すべてのファイルを検索
+    window.addEventListener("search-in-all", ((e: CustomEvent) => {
+      this.handleSearchInAll(e.detail.query);
+    }) as EventListener);
+
+    // 検索結果にジャンプ
+    window.addEventListener("jump-to-search-result", ((e: CustomEvent) => {
+      this.handleJumpToSearchResult(e.detail);
     }) as EventListener);
   }
 
@@ -557,6 +604,228 @@ class UIManager {
   private handleSettings(): void {
     console.log("Settings");
     this.logToConsole("Opening settings...");
+  }
+
+  /**
+   * 現在のファイル内を検索
+   */
+  private handleSearchInCurrent(query: string): void {
+    const content = this.editor_manager.getValue();
+    const lines = content.split("\n");
+    const results: any[] = [];
+
+    const active_tab = this.tab_manager.getActiveTab();
+    if (!active_tab) return;
+
+    const file_name = active_tab.label;
+    const file_path = active_tab.file_path || "Untitled";
+
+    lines.forEach((line, index) => {
+      let start_index = 0;
+
+      // 完全一致検索（大文字小文字を区別）
+      while ((start_index = line.indexOf(query, start_index)) !== -1) {
+        results.push({
+          file_path,
+          file_name,
+          line_number: index + 1,
+          line_content: line.trim(),
+          match_start: start_index,
+          match_end: start_index + query.length,
+        });
+        start_index += query.length;
+      }
+    });
+
+    this.search_manager.setResults(results);
+  }
+
+  /**
+   * すべてのファイルを検索
+   */
+  private async handleSearchInAll(query: string): Promise<void> {
+    const root_path = this.explorer_manager.getRootPath();
+    if (!root_path || !window.electronAPI) {
+      this.logToConsole("No folder opened for searching");
+      return;
+    }
+
+    this.logToConsole(`Searching in all files for: "${query}"`);
+    const results: any[] = [];
+
+    // ディレクトリを再帰的に検索
+    await this.searchInDirectory(root_path, query, results);
+
+    this.search_manager.setResults(results);
+    this.logToConsole(`Found ${results.length} results`);
+  }
+
+  /**
+   * ディレクトリ内を再帰的に検索
+   */
+  private async searchInDirectory(
+    dir_path: string,
+    query: string,
+    results: any[]
+  ): Promise<void> {
+    if (!window.electronAPI) return;
+
+    const dir_result = await window.electronAPI.readDirectory(dir_path);
+    if (!dir_result.success || !dir_result.items) return;
+
+    for (const item of dir_result.items) {
+      // 隠しファイルとnode_modules, distをスキップ
+      if (
+        item.name.startsWith(".") ||
+        item.name === "node_modules" ||
+        item.name === "dist" ||
+        item.name === "dist_public"
+      ) {
+        continue;
+      }
+
+      if (item.isDirectory) {
+        // ディレクトリの場合は再帰的に検索
+        await this.searchInDirectory(item.path, query, results);
+      } else {
+        // バイナリファイルをスキップ
+        if (this.isBinaryFile(item.name)) {
+          continue;
+        }
+
+        // ファイルの場合は内容を検索
+        const file_result = await window.electronAPI.readFile(item.path);
+        if (file_result.success && file_result.content) {
+          const lines = file_result.content.split("\n");
+
+          lines.forEach((line, index) => {
+            let start_index = 0;
+
+            // 完全一致検索（大文字小文字を区別）
+            while ((start_index = line.indexOf(query, start_index)) !== -1) {
+              results.push({
+                file_path: item.path,
+                file_name: item.name,
+                line_number: index + 1,
+                line_content: line.trim(),
+                match_start: start_index,
+                match_end: start_index + query.length,
+              });
+              start_index += query.length;
+            }
+          });
+        }
+      }
+    }
+  }
+
+  /**
+   * バイナリファイルかどうかを判定
+   */
+  private isBinaryFile(filename: string): boolean {
+    const binary_extensions = [
+      // 画像
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".gif",
+      ".bmp",
+      ".ico",
+      ".svg",
+      ".webp",
+      // 動画
+      ".mp4",
+      ".avi",
+      ".mov",
+      ".wmv",
+      ".flv",
+      ".mkv",
+      // 音声
+      ".mp3",
+      ".wav",
+      ".ogg",
+      ".flac",
+      ".aac",
+      // アーカイブ
+      ".zip",
+      ".rar",
+      ".7z",
+      ".tar",
+      ".gz",
+      ".bz2",
+      // 実行ファイル
+      ".exe",
+      ".dll",
+      ".so",
+      ".dylib",
+      ".app",
+      // フォント
+      ".ttf",
+      ".otf",
+      ".woff",
+      ".woff2",
+      ".eot",
+      // その他
+      ".pdf",
+      ".doc",
+      ".docx",
+      ".xls",
+      ".xlsx",
+      ".ppt",
+      ".pptx",
+      ".db",
+      ".sqlite",
+      ".bin",
+      ".dat",
+    ];
+
+    const lower_filename = filename.toLowerCase();
+    return binary_extensions.some((ext) => lower_filename.endsWith(ext));
+  }
+
+  /**
+   * 検索結果にジャンプ
+   */
+  private async handleJumpToSearchResult(result: any): Promise<void> {
+    // ファイルが既に開いているかチェック
+    let existing_tab = this.tab_manager.findTabByFilePath(result.file_path);
+
+    if (!existing_tab) {
+      // ファイルを開く
+      if (window.electronAPI && result.file_path !== "Untitled") {
+        const file_result = await window.electronAPI.readFile(result.file_path);
+        if (file_result.success && file_result.content) {
+          this.hideWelcomeScreen();
+
+          const language = this.editor_manager.detectLanguageFromPath(
+            result.file_path
+          );
+          const tab_id = this.tab_manager.createTab(
+            result.file_name,
+            result.file_path,
+            file_result.content,
+            language
+          );
+
+          this.editor_manager.setValue(file_result.content);
+          this.editor_manager.setLanguage(language);
+          this.file_manager.setCurrentFile(
+            result.file_path,
+            file_result.content,
+            false
+          );
+
+          existing_tab = this.tab_manager.getTab(tab_id);
+        }
+      }
+    } else {
+      // 既に開いている場合はアクティブ化
+      this.tab_manager.activateTab(existing_tab.id);
+    }
+
+    // 該当行にジャンプ
+    this.editor_manager.goToLine(result.line_number);
+    this.editor_manager.focus();
   }
 
   /**

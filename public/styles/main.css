@@ -1,0 +1,15 @@
+/**
+ * メインCSSファイル
+ * 全てのスタイルシートをインポート
+ */
+
+@import url("./variables.css");
+@import url("./base.css");
+@import url("./toolbar.css");
+@import url("./sidebar.css");
+@import url("./explorer.css");
+@import url("./search.css");
+@import url("./editor.css");
+@import url("./welcome.css");
+@import url("./debug.css");
+@import url("./statusbar.css");

@@ -1,0 +1,87 @@
+/**
+ * ツールバーのスタイル
+ */
+
+#toolbar {
+  height: var(--toolbar-height);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  -webkit-app-region: drag;
+  position: relative;
+}
+
+.toolbar-left,
+.toolbar-center,
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar-left {
+  flex: 1;
+  justify-content: flex-start;
+  z-index: 1;
+}
+
+.toolbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toolbar-center .app-title {
+  pointer-events: none;
+  user-select: none;
+}
+
+.toolbar-right {
+  flex: 1;
+  justify-content: flex-end;
+  z-index: 1;
+}
+
+.toolbar-button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: transparent;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  transition: background-color 0.15s ease;
+  -webkit-app-region: no-drag;
+}
+
+.toolbar-button:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.toolbar-button:active {
+  background-color: var(--color-bg-active);
+}
+
+.toolbar-button .material-icons {
+  font-size: 20px;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-border);
+  margin: 0 4px;
+  -webkit-app-region: no-drag;
+}
+
+.app-title {
+  font-size: var(--font-size-normal);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
