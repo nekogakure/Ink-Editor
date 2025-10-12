@@ -55,9 +55,7 @@
           <span class="app-title">InkEditor</span>
         </div>
         <div class="toolbar-right">
-          <button class="toolbar-button" id="btn-settings" title="Settings">
-            <span class="material-icons">settings</span>
-          </button>
+          <!-- 設定ボタンはサイドバーに移動 -->
         </div>
       </header>
 
@@ -77,6 +75,14 @@
             </button>
             <button class="sidebar-tab" data-panel="outline">
               <span class="material-icons">list</span>
+            </button>
+            <!-- 設定ボタンを最下部に追加 -->
+            <button
+              class="sidebar-tab sidebar-tab-bottom"
+              id="btn-settings"
+              title="Settings"
+            >
+              <span class="material-icons">settings</span>
             </button>
           </div>
           <div class="sidebar-content">
@@ -243,6 +249,91 @@
       </div>
       <div class="status-right">
         <span class="status-item" id="status-language">Plain Text</span>
+      </div>
+    </div>
+
+    <!-- 設定ダイアログ -->
+    <div id="settings-dialog" class="dialog-overlay" style="display: none">
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <h2>Settings</h2>
+          <button class="dialog-close" id="settings-close">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="dialog-content">
+          <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="setting-item">
+              <label for="setting-theme">Theme</label>
+              <select id="setting-theme" class="setting-select">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="setting-font-size">Font Size</label>
+              <input
+                type="number"
+                id="setting-font-size"
+                class="setting-input"
+                min="10"
+                max="30"
+                value="14"
+              />
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Editor</h3>
+            <div class="setting-item">
+              <label for="setting-tab-size">Tab Size</label>
+              <input
+                type="number"
+                id="setting-tab-size"
+                class="setting-input"
+                min="2"
+                max="8"
+                value="4"
+              />
+            </div>
+            <div class="setting-item">
+              <label for="setting-word-wrap">Word Wrap</label>
+              <select id="setting-word-wrap" class="setting-select">
+                <option value="off">Off</option>
+                <option value="on">On</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="setting-minimap" checked />
+                Show Minimap
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Files</h3>
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="setting-auto-save" />
+                Auto Save
+              </label>
+            </div>
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="setting-format-on-save" />
+                Format On Save
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button class="btn-secondary" id="settings-reset">
+            Reset to Default
+          </button>
+          <button class="btn-primary" id="settings-apply">Apply</button>
+        </div>
       </div>
     </div>
 

@@ -457,6 +457,18 @@ export class EditorManager {
   }
 
   /**
+   * エディタのオプションを更新
+   */
+  public updateOptions(options: any): void {
+    if (!this.editor) {
+      console.warn("Editor is not initialized. Cannot update options.");
+      return;
+    }
+    this.editor.updateOptions(options);
+    console.log("Editor options updated:", options);
+  }
+
+  /**
    * エディタの表示/非表示を切り替え
    */
   public show(): void {
