@@ -31,6 +31,13 @@
             <span class="material-icons">note_add</span>
           </button>
           <button class="toolbar-button" id="btn-open" title="Open File">
+            <span class="material-icons">insert_drive_file</span>
+          </button>
+          <button
+            class="toolbar-button"
+            id="btn-open-folder"
+            title="Open Folder"
+          >
             <span class="material-icons">folder_open</span>
           </button>
           <button class="toolbar-button" id="btn-save" title="Save">
@@ -77,15 +84,26 @@
             <div id="explorer-panel" class="sidebar-panel active">
               <div class="panel-header">
                 <h3>EXPLORER</h3>
-                <button class="panel-action" title="New File">
-                  <span class="material-icons">note_add</span>
+                <button
+                  class="panel-action"
+                  id="btn-refresh-tree"
+                  title="Refresh Explorer"
+                >
+                  <span class="material-icons">refresh</span>
                 </button>
               </div>
               <div class="panel-body">
                 <div class="tree-view">
-                  <div class="tree-item">
-                    <span class="material-icons tree-icon">folder</span>
-                    <span>project</span>
+                  <!-- ツリーはJavaScriptで動的に生成されます -->
+                  <div class="tree-empty">
+                    <p>フォルダを開いていません</p>
+                    <button
+                      class="btn-open-folder-here"
+                      id="btn-open-folder-explorer"
+                    >
+                      <span class="material-icons">folder_open</span>
+                      <span>フォルダを開く</span>
+                    </button>
                   </div>
                 </div>
               </div>

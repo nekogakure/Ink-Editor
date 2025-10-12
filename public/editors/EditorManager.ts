@@ -9,6 +9,7 @@ export class EditorManager {
   private editor: any | null = null;
   private container: HTMLElement | null = null;
   private current_language: string = "plaintext";
+  private is_programmatic_change: boolean = false; // プログラムによる変更かどうか
 
   /**
    * エディタを初期化
@@ -70,7 +71,10 @@ export class EditorManager {
 
       // 変更イベントを監視
       this.editor.onDidChangeModelContent(() => {
-        this.onContentChange();
+        // プログラムによる変更の場合はイベントを発火しない
+        if (!this.is_programmatic_change) {
+          this.onContentChange();
+        }
       });
 
       // ウィンドウリサイズ時にレイアウトを更新
@@ -98,7 +102,15 @@ export class EditorManager {
       return;
     }
     console.log(`Setting editor value: ${value.substring(0, 50)}...`);
+
+    // プログラムによる変更であることを示す
+    this.is_programmatic_change = true;
     this.editor.setValue(value);
+
+    // 少し待ってからフラグをリセット（非同期イベントのため）
+    setTimeout(() => {
+      this.is_programmatic_change = false;
+    }, 0);
   }
 
   /**

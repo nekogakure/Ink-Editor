@@ -151,7 +151,27 @@ export class FileManager {
   }
 
   /**
-   * 現在のファイルが変更されているかチェック
+   * 現在のファイル情報を設定（タブ切り替え時に使用）
+   */
+  public setCurrentFile(
+    file_path: string | null,
+    content: string,
+    is_modified: boolean = false
+  ): void {
+    this.current_file_path = file_path;
+    this.current_file_content = content;
+    this.is_modified = is_modified;
+  }
+
+  /**
+   * 現在のファイルの内容を取得
+   */
+  public getCurrentFileContent(): string {
+    return this.current_file_content;
+  }
+
+  /**
+   * ファイルが変更されているか
    */
   public isModified(): boolean {
     return this.is_modified;

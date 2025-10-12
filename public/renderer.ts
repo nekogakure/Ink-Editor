@@ -57,10 +57,17 @@ class UIManager {
     // ツールバーボタン
     this.addClickListener("btn-new", () => this.handleNewFile());
     this.addClickListener("btn-open", () => this.handleOpenFile());
+    this.addClickListener("btn-open-folder", () => this.handleOpenFolder());
     this.addClickListener("btn-save", () => this.handleSaveFile());
     this.addClickListener("btn-build", () => this.handleBuild());
     this.addClickListener("btn-run", () => this.handleRun());
     this.addClickListener("btn-settings", () => this.handleSettings());
+
+    // エクスプローラーのボタン
+    this.addClickListener("btn-open-folder-explorer", () =>
+      this.handleOpenFolder()
+    );
+    this.addClickListener("btn-refresh-tree", () => this.handleRefreshTree());
 
     // ウェルカム画面ボタン
     this.addClickListener("welcome-new", () => this.handleNewFile());
@@ -296,6 +303,9 @@ class UIManager {
     this.editor_manager.clear();
     this.editor_manager.setLanguage("plaintext");
 
+    // FileManagerの状態を更新
+    this.file_manager.setCurrentFile(null, "", false);
+
     this.logToConsole("New file created");
     this.updateStatusBar();
   }
@@ -335,6 +345,9 @@ class UIManager {
       this.editor_manager.setValue(result.content);
       this.editor_manager.setLanguage(language);
 
+      // FileManagerの状態を更新（既にopenFile()で更新済みだが念のため）
+      this.file_manager.setCurrentFile(result.path, result.content, false);
+
       this.logToConsole(`File opened: ${result.path}`);
       this.updateStatusBar();
     } else if (result.error) {
@@ -353,9 +366,24 @@ class UIManager {
     if (result.success && result.path) {
       await this.explorer_manager.openFolder(result.path);
       this.logToConsole(`Folder opened: ${result.path}`);
+
+      // ツリーが表示されたらemptyメッセージを非表示
+      const tree_empty = document.querySelector(".tree-empty") as HTMLElement;
+      if (tree_empty) {
+        tree_empty.style.display = "none";
+      }
     } else if (result.error) {
       this.logToConsole(`Error: ${result.error}`);
     }
+  }
+
+  /**
+   * ツリーを更新
+   */
+  private async handleRefreshTree(): Promise<void> {
+    console.log("Refresh tree");
+    await this.explorer_manager.refreshTree();
+    this.logToConsole("Explorer refreshed");
   }
 
   /**
@@ -379,12 +407,15 @@ class UIManager {
       this.tab_manager.setTabModified(active_tab.id, false);
 
       // ファイルパスを更新（新規保存の場合）
-      if (result.path) {
+      if (result.path !== active_tab.file_path) {
         this.tab_manager.updateTabFilePath(active_tab.id, result.path);
       }
 
       // タブの内容を更新
       this.tab_manager.updateTabContent(active_tab.id, content);
+
+      // FileManagerの状態を更新
+      this.file_manager.setCurrentFile(result.path, content, false);
 
       this.logToConsole(`File saved: ${result.path}`);
       this.updateStatusBar();
@@ -418,6 +449,9 @@ class UIManager {
 
       // タブの内容を更新
       this.tab_manager.updateTabContent(active_tab.id, content);
+
+      // FileManagerの状態を更新
+      this.file_manager.setCurrentFile(result.path, content, false);
 
       this.logToConsole(`File saved: ${result.path}`);
       this.updateStatusBar();
@@ -464,6 +498,9 @@ class UIManager {
       this.editor_manager.setValue(result.content);
       this.editor_manager.setLanguage(language);
 
+      // FileManagerの状態を更新
+      this.file_manager.setCurrentFile(file_path, result.content, false);
+
       this.logToConsole(`File opened: ${file_name}`);
     } else if (result.error) {
       this.logToConsole(`Error: ${result.error}`);
@@ -481,10 +518,11 @@ class UIManager {
     this.editor_manager.setLanguage(detail.language);
 
     // ファイルマネージャーの状態を更新
-    if (detail.file_path) {
-      // FileManagerの内部状態を更新する必要がある場合
-      // this.file_manager.setCurrentFile(detail.file_path, detail.content);
-    }
+    this.file_manager.setCurrentFile(
+      detail.file_path,
+      detail.content,
+      detail.is_modified
+    );
 
     this.updateStatusBar();
   }
