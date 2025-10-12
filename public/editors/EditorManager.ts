@@ -12,6 +12,213 @@ export class EditorManager {
   private is_programmatic_change: boolean = false; // プログラムによる変更かどうか
 
   /**
+   * C/C++言語の設定
+   */
+  private configureCppLanguage(): void {
+    // C言語の補完プロバイダーを登録
+    monaco.languages.registerCompletionItemProvider("c", {
+      provideCompletionItems: (model, position) => {
+        const suggestions = this.getCppSuggestions();
+        return { suggestions };
+      },
+    });
+
+    // C++言語の補完プロバイダーを登録
+    monaco.languages.registerCompletionItemProvider("cpp", {
+      provideCompletionItems: (model, position) => {
+        const suggestions = this.getCppSuggestions();
+        return { suggestions };
+      },
+    });
+
+    console.log("C/C++ language support configured");
+  }
+
+  /**
+   * C/C++の補完候補を取得
+   */
+  private getCppSuggestions(): any[] {
+    const keywords = [
+      "auto",
+      "break",
+      "case",
+      "char",
+      "const",
+      "continue",
+      "default",
+      "do",
+      "double",
+      "else",
+      "enum",
+      "extern",
+      "float",
+      "for",
+      "goto",
+      "if",
+      "int",
+      "long",
+      "register",
+      "return",
+      "short",
+      "signed",
+      "sizeof",
+      "static",
+      "struct",
+      "switch",
+      "typedef",
+      "union",
+      "unsigned",
+      "void",
+      "volatile",
+      "while",
+      "class",
+      "namespace",
+      "template",
+      "typename",
+      "public",
+      "private",
+      "protected",
+      "virtual",
+      "override",
+      "final",
+      "try",
+      "catch",
+      "throw",
+      "new",
+      "delete",
+      "this",
+      "nullptr",
+      "constexpr",
+      "decltype",
+      "noexcept",
+      "explicit",
+      "inline",
+      "friend",
+      "operator",
+      "bool",
+      "true",
+      "false",
+    ];
+
+    const standardFunctions = [
+      "printf",
+      "scanf",
+      "malloc",
+      "free",
+      "calloc",
+      "realloc",
+      "memcpy",
+      "memset",
+      "strlen",
+      "strcpy",
+      "strcmp",
+      "strcat",
+      "fopen",
+      "fclose",
+      "fread",
+      "fwrite",
+      "fprintf",
+      "fscanf",
+      "cout",
+      "cin",
+      "endl",
+      "vector",
+      "string",
+      "map",
+      "set",
+      "list",
+      "queue",
+      "stack",
+      "pair",
+      "make_pair",
+    ];
+
+    const suggestions: any[] = [];
+
+    // キーワードの補完
+    keywords.forEach((keyword) => {
+      suggestions.push({
+        label: keyword,
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: keyword,
+        detail: "C/C++ keyword",
+      });
+    });
+
+    // 標準関数の補完
+    standardFunctions.forEach((func) => {
+      suggestions.push({
+        label: func,
+        kind: monaco.languages.CompletionItemKind.Function,
+        insertText: func,
+        detail: "Standard function",
+      });
+    });
+
+    // よく使うスニペット
+    suggestions.push(
+      {
+        label: "main",
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText:
+          "int main(int argc, char *argv[]) {\n\t${1}\n\treturn 0;\n}",
+        insertTextRules:
+          monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        detail: "Main function",
+        documentation: "Create a main function",
+      },
+      {
+        label: "for",
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText:
+          "for (int ${1:i} = 0; ${1:i} < ${2:n}; ${1:i}++) {\n\t${3}\n}",
+        insertTextRules:
+          monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        detail: "For loop",
+        documentation: "Create a for loop",
+      },
+      {
+        label: "if",
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText: "if (${1:condition}) {\n\t${2}\n}",
+        insertTextRules:
+          monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        detail: "If statement",
+        documentation: "Create an if statement",
+      },
+      {
+        label: "while",
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText: "while (${1:condition}) {\n\t${2}\n}",
+        insertTextRules:
+          monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        detail: "While loop",
+        documentation: "Create a while loop",
+      },
+      {
+        label: "struct",
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText: "struct ${1:Name} {\n\t${2}\n};",
+        insertTextRules:
+          monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        detail: "Struct definition",
+        documentation: "Create a struct",
+      },
+      {
+        label: "include",
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText: "#include <${1:stdio.h}>",
+        insertTextRules:
+          monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        detail: "Include header",
+        documentation: "Include a header file",
+      }
+    );
+
+    return suggestions;
+  }
+
+  /**
    * エディタを初期化
    */
   public initialize(container_id: string): void {
@@ -31,6 +238,9 @@ export class EditorManager {
     console.log("Initializing Monaco Editor...");
 
     try {
+      // C/C++言語のキーワードと型を定義
+      this.configureCppLanguage();
+
       // Monaco Editorを作成
       this.editor = monaco.editor.create(this.container, {
         value: "",
