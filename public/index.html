@@ -9,6 +9,17 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <!-- Monaco Editor Loader -->
+    <script>
+      var require = {
+        paths: {
+          vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs",
+        },
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/editor/editor.main.nls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/editor/editor.main.js"></script>
   </head>
   <body>
     <!-- メインコンテナ -->
@@ -119,37 +130,41 @@
         </aside>
 
         <!-- エディタエリア -->
-        <main id="editor-area">
+        <main id="editor-area" style="display: none">
           <!-- タブバー -->
           <div id="tab-bar">
-            <div class="tab active" data-file="untitled-1">
-              <span class="tab-label">Untitled-1</span>
-              <button class="tab-close">
-                <span class="material-icons">close</span>
+            <!-- タブはJavaScriptで動的に生成されます -->
+          </div>
+
+          <!-- Monaco Editorコンテナ -->
+          <div id="editor-container" style="flex: 1; overflow: hidden"></div>
+        </main>
+
+        <!-- ウェルカム画面 -->
+        <div
+          id="welcome-screen"
+          style="
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div class="welcome-content">
+            <h1>InkEditor</h1>
+            <p>A simple and beautiful editor for developers.</p>
+            <div class="welcome-actions">
+              <button class="welcome-button" id="welcome-new">
+                <span class="material-icons">note_add</span>
+                <span>New File</span>
+              </button>
+              <button class="welcome-button" id="welcome-open">
+                <span class="material-icons">folder_open</span>
+                <span>Open File</span>
               </button>
             </div>
           </div>
-
-          <!-- エディタコンテナ -->
-          <div id="editor-container">
-            <div class="editor-welcome">
-              <div class="welcome-content">
-                <h1>InkEditor</h1>
-                <p>A simple and beautiful editor for developers.</p>
-                <div class="welcome-actions">
-                  <button class="welcome-button" id="welcome-new">
-                    <span class="material-icons">note_add</span>
-                    <span>New File</span>
-                  </button>
-                  <button class="welcome-button" id="welcome-open">
-                    <span class="material-icons">folder_open</span>
-                    <span>Open File</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
+        </div>
       </div>
 
       <!-- 下部デバッグエリア -->
@@ -193,6 +208,6 @@
       </div>
     </div>
 
-    <script src="renderer.js"></script>
+    <script src="../dist_public/renderer.js"></script>
   </body>
 </html>

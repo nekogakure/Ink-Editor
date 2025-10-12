@@ -1,14 +1,10 @@
 {
   "compilerOptions": {
-    "rootDir": "public",
-    "outDir": "dist_public",
-    "module": "commonjs",
-    "target": "esnext",
-    "lib": ["es6", "dom"],
+    "module": "esnext",
+    "target": "es2020",
+    "lib": ["es2020", "dom"],
     "types": [],
     "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "strict": true,
@@ -18,8 +14,10 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types", "./public/types"]
   },
   "include": ["public/**/*.ts"],
-  "exclude": ["dist_pu/**/*.js"]
+  "exclude": ["dist_public/**", "node_modules"]
 }

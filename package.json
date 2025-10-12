@@ -18,17 +18,20 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build:main && npm run build:renderer",
     "build:main": "tsc",
-    "build:renderer": "tsc -p tsconfig.renderer.json",
+    "build:renderer": "webpack",
     "watch": "npm run watch:main & npm run watch:renderer",
     "watch:main": "tsc --watch",
-    "watch:renderer": "tsc -p tsconfig.renderer.json --watch",
+    "watch:renderer": "webpack --watch",
     "start": "npm run build && electron .",
     "dev": "npm run build && electron . --dev"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "electron": "^38.2.2",
-    "typescript": "^5.4.0"
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.4.0",
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1"
   },
   "dependencies": {
     "monaco-editor": "^0.45.0"

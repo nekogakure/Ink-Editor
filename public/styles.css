@@ -244,19 +244,27 @@ body {
   border-radius: var(--border-radius);
   color: var(--color-text-primary);
   transition: background-color 0.15s ease;
+  user-select: none;
 }
 
 .tree-item:hover {
   background-color: var(--color-bg-hover);
 }
 
+.tree-item.selected {
+  background-color: var(--color-bg-active);
+}
+
+.tree-item.expanded > .tree-icon {
+  color: var(--color-text-primary);
+}
+
 .tree-icon {
   font-size: 18px;
   margin-right: 8px;
   color: var(--color-text-secondary);
-}
-
-/* 検索入力 */
+  flex-shrink: 0;
+} /* 検索入力 */
 .search-input {
   width: 100%;
   padding: 8px 12px;
