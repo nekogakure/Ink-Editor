@@ -42,6 +42,17 @@ contextBridge.exposeInMainWorld("electronAPI", {
   fileExists: (filePath: string) => ipcRenderer.invoke("file-exists", filePath),
   createDirectory: (dirPath: string) =>
     ipcRenderer.invoke("create-directory", dirPath),
+
+  // セッション状態管理
+  getSessionState: () => ipcRenderer.invoke("get-session-state"),
+  validateSession: () => ipcRenderer.invoke("validate-session"),
+  setLastOpenedFolder: (folderPath: string | null) =>
+    ipcRenderer.invoke("set-last-opened-folder", folderPath),
+  setOpenedFiles: (filePaths: string[]) =>
+    ipcRenderer.invoke("set-opened-files", filePaths),
+  setActiveFile: (filePath: string | null) =>
+    ipcRenderer.invoke("set-active-file", filePath),
+  clearSession: () => ipcRenderer.invoke("clear-session"),
 });
 
 // TypeScript型定義
@@ -94,6 +105,22 @@ declare global {
         success: boolean;
         error?: string;
       }>;
+
+      // セッション状態管理
+      getSessionState: () => Promise<{
+        lastOpenedFolder: string | null;
+        openedFiles: string[];
+        activeFile: string | null;
+      }>;
+      validateSession: () => Promise<{
+        isValid: boolean;
+        validFiles: string[];
+        folderExists: boolean;
+      }>;
+      setLastOpenedFolder: (folderPath: string | null) => Promise<void>;
+      setOpenedFiles: (filePaths: string[]) => Promise<void>;
+      setActiveFile: (filePath: string | null) => Promise<void>;
+      clearSession: () => Promise<void>;
     };
   }
 }

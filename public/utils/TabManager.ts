@@ -270,6 +270,32 @@ export class TabManager {
   }
 
   /**
+   * タブ情報を更新
+   */
+  public updateTab(
+    tab_id: string,
+    updates: {
+      label?: string;
+      file_path?: string;
+      content?: string;
+      language?: string;
+    }
+  ): void {
+    const tab = this.tabs.get(tab_id);
+    if (!tab) {
+      console.warn(`Tab with id "${tab_id}" not found`);
+      return;
+    }
+
+    if (updates.label !== undefined) tab.label = updates.label;
+    if (updates.file_path !== undefined) tab.file_path = updates.file_path;
+    if (updates.content !== undefined) tab.content = updates.content;
+    if (updates.language !== undefined) tab.language = updates.language;
+
+    this.updateTabElement(tab);
+  }
+
+  /**
    * ファイルパスからファイル名を取得
    */
   private getFileNameFromPath(file_path: string): string {

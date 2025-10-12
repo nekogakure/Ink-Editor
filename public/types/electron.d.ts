@@ -53,6 +53,22 @@ declare global {
         success: boolean;
         error?: string;
       }>;
+
+      // セッション状態管理
+      getSessionState: () => Promise<{
+        lastOpenedFolder: string | null;
+        openedFiles: string[];
+        activeFile: string | null;
+      }>;
+      validateSession: () => Promise<{
+        isValid: boolean;
+        validFiles: string[];
+        folderExists: boolean;
+      }>;
+      setLastOpenedFolder: (folderPath: string | null) => Promise<void>;
+      setOpenedFiles: (filePaths: string[]) => Promise<void>;
+      setActiveFile: (filePath: string | null) => Promise<void>;
+      clearSession: () => Promise<void>;
     };
   }
 }

@@ -12,6 +12,13 @@ export class ExplorerManager {
   }
 
   /**
+   * 現在のフォルダパスを取得
+   */
+  public getCurrentFolder(): string | null {
+    return this.root_path;
+  }
+
+  /**
    * フォルダを開いてツリーを表示
    */
   public async openFolder(folder_path: string): Promise<void> {
