@@ -13,11 +13,6 @@ import { SearchHandlers } from "./handlers/SearchHandlers";
 import { EventHandlers } from "./handlers/EventHandlers";
 
 /**
- * レンダラープロセス
- * UIのインタラクションとイベント処理を管理
- */
-
-/**
  * UIマネージャークラス
  * すべてのマネージャーとハンドラーを統合
  */

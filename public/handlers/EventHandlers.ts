@@ -252,12 +252,17 @@ export class EventHandlers {
   private handleTabChange(tab: any): void {
     console.log("Tab changed:", tab);
 
+    this.ui_controller.showEditor();
+
     // エディタの内容を更新
     this.editor_manager.setValue(tab.content);
     this.editor_manager.setLanguage(tab.language);
 
     // FileManagerの状態を更新
     this.file_manager.setCurrentFile(tab.file_path, tab.content, false);
+
+    // エディタのレイアウトを再計算（非表示→表示後のサイズずれ対策）
+    setTimeout(() => this.editor_manager.layout(), 0);
 
     this.ui_controller.updateStatusBar();
   }

@@ -92,29 +92,33 @@ export class UIController {
    * ウェルカム画面を非表示にしてエディタを表示
    */
   public hideWelcomeScreen(): void {
-    const welcome = document.querySelector(".editor-welcome") as HTMLElement;
-    const editor_container = document.getElementById(
-      "editor-container"
-    ) as HTMLElement;
+    const welcome = document.getElementById("welcome-screen") as HTMLElement;
+    const editor_area = document.getElementById("editor-area") as HTMLElement;
 
-    if (welcome) {
-      welcome.style.display = "none";
-    }
-
-    if (editor_container) {
-      editor_container.style.display = "block";
-    }
+    if (welcome) welcome.style.display = "none";
+    if (editor_area) editor_area.style.display = "flex";
   }
 
   /**
    * エディタを非表示にしてウェルカム画面を表示
    */
   public showWelcomeScreen(): void {
-    const welcome = document.querySelector(".editor-welcome") as HTMLElement;
-    const editor_container = document.getElementById("editor-container");
+    const welcome = document.getElementById("welcome-screen") as HTMLElement;
+    const editor_area = document.getElementById("editor-area") as HTMLElement;
 
     if (welcome) welcome.style.display = "flex";
-    if (editor_container) editor_container.style.display = "none";
+    if (editor_area) editor_area.style.display = "none";
+  }
+
+  /**
+   * エディタエリアを表示（タブが既にある場合に使用）
+   */
+  public showEditor(): void {
+    const welcome = document.getElementById("welcome-screen") as HTMLElement;
+    const editor_area = document.getElementById("editor-area") as HTMLElement;
+
+    if (welcome) welcome.style.display = "none";
+    if (editor_area) editor_area.style.display = "flex";
   }
 
   /**
